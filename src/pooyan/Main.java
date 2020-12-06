@@ -2,6 +2,7 @@ package pooyan;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -16,8 +17,10 @@ public class Main extends JFrame implements Initable {
 
 	private JLabel laBackground;
 	private Wolf wolf;
-	
-	private boolean isstart = false;
+
+	ArrayList<Wolf> wolves = new ArrayList<Wolf>();
+
+//	private boolean isstart = false;
 
 	public Main() {
 		init();
@@ -35,9 +38,16 @@ public class Main extends JFrame implements Initable {
 	@Override
 	public void init() {
 		laBackground = new JLabel(new ImageIcon("images/background.png"));
-		wolf = new Wolf();
 
-		
+		new Thread(new Runnable() {
+			public void run() {
+				for (int i = 0; i < 4; i++) {
+					wolf = new Wolf();
+					wolves.add(wolf);
+				}
+			}
+		}).start();
+//		wolf = new Wolf();
 	}
 
 	@Override
@@ -53,31 +63,26 @@ public class Main extends JFrame implements Initable {
 
 	@Override
 	public void batch() {
-		
+//		add(wolf);
 		new Thread(new Runnable() {
-
-			@Override
 			public void run() {
-				isstart = true;
-				while (isstart) {
-					for (int i = 0; i < 4; i++) {
-						add(wolf);
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+				for (int i = 0; i < wolves.size(); i++) {
+					add(wolves.get(i));
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-					isstart = false; 
 				}
 			}
-		});
-		add(wolf);
+		}).start();
 	}
 
+	
 	@Override
 	public void listener() {
+		
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
