@@ -12,18 +12,20 @@ public class Wolf extends JLabel {
 	public Wolf wolf = this;
 	public final static String TAG = "Wolf : ";
 
-	public ImageIcon iconWolfM4, iconWalkWolfR1;
+	public ImageIcon iconWolfM4, iconWalkWolfR1, iconAttackStayWolf ;
 	public int x = 50;
 	public int y = 50;
 
 	public boolean isDown = false;
 	public boolean isRight = false;
+	public boolean isUp = false;
 
 	public Wolf() {
 		iconWolfM4 = new ImageIcon("images/WolfMint4.png");
 		iconWalkWolfR1 = new ImageIcon("images/walkWolfR1.png");
+		iconAttackStayWolf = new ImageIcon("images/attackStayWolfL.png");
 		setIcon(iconWolfM4);
-		setSize(150, 150);
+		setSize(130, 130);
 		setLocation(x, y);
 
 	}
@@ -37,7 +39,7 @@ public class Wolf extends JLabel {
 				public void run() {
 					isDown = true;
 					while (isDown) {
-						if (y > 490) {
+						if (y > 480) {
 							isDown = false;
 							isRight = true;
 							wolf.moveRight();
@@ -66,14 +68,16 @@ public class Wolf extends JLabel {
 	public void moveRight() {
 		System.out.println(TAG + "moveRight");
 
-//		if (isRight== false) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-//					isRight = true;
 				while (isRight) {
-					if (x > 500) {
+					if (x > 530) {
 						isRight = false;
+						isUp = true;
+						wolf.moveUP();
+						setIcon(iconAttackStayWolf);
+						break;
 					}
 					x++;
 					setLocation(x, y);
@@ -92,6 +96,33 @@ public class Wolf extends JLabel {
 			}
 		}).start();
 	}
+	
+	public void moveUP() {
+		System.out.println(TAG + "moveUp");
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (isUp) {
+					if (y < 100) {
+						isUp = false;
+					}
+					y--;
+					setLocation(x, y);
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
 
 }
-//}
