@@ -2,6 +2,8 @@ package pooyan;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -14,13 +16,12 @@ public class Main extends JFrame implements Initable {
 	private Main main = this;
 	// еб╠в
 	private static final String TAG = "main : ";
+	
+	public static int floor=0;
+	public JLabel laBackground;
+	public Wolf wolf;
 
-	private JLabel laBackground;
-	private Wolf wolf;
-
-	ArrayList<Wolf> wolves = new ArrayList<Wolf>();
-
-//	private boolean isstart = false;
+	ArrayList<Wolf> wolves;
 
 	public Main() {
 		init();
@@ -38,16 +39,23 @@ public class Main extends JFrame implements Initable {
 	@Override
 	public void init() {
 		laBackground = new JLabel(new ImageIcon("images/background.png"));
-
+		wolf = new Wolf();
+		wolves = new ArrayList<Wolf>();
+		
 		new Thread(new Runnable() {
 			public void run() {
 				for (int i = 0; i < 4; i++) {
-					wolf = new Wolf();
-					wolves.add(wolf);
+					//wolf = new Wolf();
+					wolves.add(new Wolf());
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
+				
 			}
 		}).start();
-//		wolf = new Wolf();
 	}
 
 	@Override
@@ -55,8 +63,9 @@ public class Main extends JFrame implements Initable {
 		setTitle("Pooyan");
 		setSize(620, 630);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setLocationRelativeTo(null);
-		setLayout(null);
+		getContentPane().setLayout(null);
 		setContentPane(laBackground);
 
 	}
@@ -67,7 +76,9 @@ public class Main extends JFrame implements Initable {
 		new Thread(new Runnable() {
 			public void run() {
 				for (int i = 0; i < wolves.size(); i++) {
-					add(wolves.get(i));
+					wolves.get(i).moveFall();
+					getContentPane().add(wolves.get(i));
+					System.out.println(wolves.size());
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
@@ -77,21 +88,24 @@ public class Main extends JFrame implements Initable {
 				}
 			}
 		}).start();
+		
+		
 	}
 
 	
 	@Override
 	public void listener() {
 		
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					wolf.moveFall();
-				}
-			}
-		});
+//		addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+//					wolf.moveFall();
+//				}
+//			}
+//		});
 
+		
 	}
 
 }
