@@ -16,12 +16,13 @@ public class Wolf extends JLabel {
 
 	public Main main;
 	public int floor = 0;
-
+	
 	public ImageIcon iconWolfM4, iconWolfM5, iconWalkWolfR1, iconAttackStayWolf, iconAttackWolf1, iconAttackWolf2;
 
 	public int x = 50;
 	public int y = 50;
 
+	public int count=0;
 	public boolean isDown = false;
 	public boolean isRight = false;
 	public boolean isUp = false;
@@ -160,32 +161,66 @@ public class Wolf extends JLabel {
 	}
 
 	public void attack() {
-		System.out.println(TAG + "attack");
-
+//		System.out.println(TAG + "attack");
+//
+//		new Thread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				while (isAttack) {
+//					if ((int) (Math.random() * 1000) == 5) {
+//						setIcon(iconAttackWolf1);
+//						setLocation(510, getY());
+//					}else {
+//						try {
+//							Thread.sleep((int) (Math.random() * 1000) );
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//				}
+//
+//			}
+//		}).start();
+//
+//	}
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				int num = random.nextInt(10000);
 				while (isAttack) {
-//					random = new Random();
-					random.nextInt(1000);
-					int num = random.nextInt() + 1;
+//					random.nextInt(1000);
+//					int num = random.nextInt(1000);
 					System.out.println(num);
-
-					if (num % 7 == 0) {
+					count++;
+//					if (num % 7 == 0) {
+					if (count == num) {
 						setIcon(iconAttackWolf1);
 						setLocation(510, getY());
 						try {
-							Thread.sleep(800);
+							Thread.sleep( random.nextInt(2000)+500);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 						setIcon(iconAttackWolf2);
-						break;
+						setIcon(iconAttackWolf1);
+						setIcon(iconAttackStayWolf);
+						
+						setLocation(x, getY());
+						try {
+							Thread.sleep(800);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+//						break;
+						num = random.nextInt(10000);
+						count=0;
 						
 					}
 				}
 			}
 		}).start();
 	}
-
 }

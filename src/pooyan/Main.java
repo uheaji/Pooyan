@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -16,7 +17,7 @@ public class Main extends JFrame implements Initable {
 	private Main main = this;
 	// еб╠в
 	private static final String TAG = "main : ";
-	
+	public Random random = new Random();
 	public static int floor=0;
 	public JLabel laBackground;
 	public Wolf wolf;
@@ -42,20 +43,7 @@ public class Main extends JFrame implements Initable {
 		wolf = new Wolf();
 		wolves = new ArrayList<Wolf>();
 		
-		new Thread(new Runnable() {
-			public void run() {
-				for (int i = 0; i < 4; i++) {
-					//wolf = new Wolf();
-					wolves.add(new Wolf());
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				
-			}
-		}).start();
+		
 	}
 
 	@Override
@@ -75,19 +63,36 @@ public class Main extends JFrame implements Initable {
 //		add(wolf);
 		new Thread(new Runnable() {
 			public void run() {
-				for (int i = 0; i < wolves.size(); i++) {
+				for (int i = 0; i < 4; i++) {
+					//wolf = new Wolf();
+					wolves.add(new Wolf());
 					wolves.get(i).moveFall();
 					getContentPane().add(wolves.get(i));
-					System.out.println(wolves.size());
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
+				
 			}
 		}).start();
+		
+//		new Thread(new Runnable() {
+//			public void run() {
+//				for (int i = 0; i < wolves.size(); i++) {
+//					wolves.get(i).moveFall();
+//					getContentPane().add(wolves.get(i));
+//					System.out.println(wolves.size());
+//					try {
+//						Thread.sleep(1000);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//		}).start();
 		
 		
 	}
