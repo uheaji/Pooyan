@@ -17,7 +17,8 @@ public class Wolf extends JLabel {
 	public Main main;
 	public int floor = 0;
 	
-	public ImageIcon iconWolfM4, iconWolfM5, iconWalkWolfR1, iconAttackStayWolf, iconAttackWolf1, iconAttackWolf2;
+	public ImageIcon iconWolfM4, iconWolfM5, iconWalkWolfR, 
+	iconAttackStayWolf, iconAttackWolf1, iconAttackWolf2;
 
 	public int x = 50;
 	public int y = 50;
@@ -33,14 +34,14 @@ public class Wolf extends JLabel {
 	public Wolf() {
 		iconWolfM4 = new ImageIcon("images/WolfMint4.png");
 		iconWolfM5 = new ImageIcon("images/WolfMint5.png");
-		iconWalkWolfR1 = new ImageIcon("images/walkWolfR1.png");
-		iconAttackStayWolf = new ImageIcon("images/attackStayWolfL.png");
+		iconWalkWolfR = new ImageIcon("images/walkWolfR.gif");
+		iconAttackStayWolf = new ImageIcon("images/attackStayWolf.gif");
 		iconAttackWolf1 = new ImageIcon("images/attackWolf1.png");
 		iconAttackWolf2 = new ImageIcon("images/attackWolf2.png");
+		
 		setIcon(iconWolfM4);
 		setSize(130, 130);
 		setLocation(x, y);
-
 	}
 
 	public void moveFall() { // Ç³¼±Å¸°í ¶¥À¸·Î ³»·Á°¨
@@ -55,8 +56,10 @@ public class Wolf extends JLabel {
 						if (y > 490) {
 							isDown = false;
 							isRight = true;
+							main.floor = main.floor + 1;
+							floor = main.floor;
 							wolf.moveRight();
-							setIcon(iconWalkWolfR1);
+							setIcon(iconWalkWolfR);
 							break;
 						}
 						y++;
@@ -85,17 +88,28 @@ public class Wolf extends JLabel {
 			@Override
 			public void run() {
 				while (isRight) {
-					if (x > 540) {
+					if (x > 540 && floor <= 4) {
 						isRight = false;
 						isUp = true;
-						main.floor = main.floor + 1;
-						floor = main.floor;
+//						main.floor = main.floor + 1;
+//						floor = main.floor;
 						wolf.moveUP();
 						setIcon(iconAttackStayWolf);
 						break;
 					}
+					 if (x > 540 && floor >= 5) {
+						 x++;
+						 setLocation(x, y);
+						 try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
 					x++;
 					setLocation(x, y);
+					
 					try {
 						Thread.sleep(10);
 					} catch (InterruptedException e) {
@@ -119,10 +133,6 @@ public class Wolf extends JLabel {
 			@Override
 			public void run() {
 				while (isUp) {
-//					if (y < 405 + y1) {
-//						y1 += 50;
-//						isUp = false;
-//					} 
 					if (floor == 1 && y < 400) {
 						isUp = false;
 						isAttack = true;
@@ -161,10 +171,43 @@ public class Wolf extends JLabel {
 	}
 
 	public void attack() {
-//		System.out.println(TAG + "attack");
-//
+		System.out.println(TAG + "attack");
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				int num = random.nextInt(1000);
+				while (isAttack) {
+					System.out.println(num);
+					count++;
+//					if (num % 7 == 0) {
+					if (count == num) {
+						setIcon(iconAttackWolf1);
+						setLocation(510, getY());
+						try {
+							Thread.sleep( random.nextInt(2000)+800);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						setIcon(iconAttackWolf2);
+						setIcon(iconAttackWolf1);
+						setIcon(iconAttackStayWolf);
+						
+						setLocation(x, getY());
+						try {
+							Thread.sleep( random.nextInt(2000)+800);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+//						break;
+						num = random.nextInt(10000);
+						count=0;
+					}
+				}
+			}
+		}).start();
+		
 //		new Thread(new Runnable() {
-//
 //			@Override
 //			public void run() {
 //				while (isAttack) {
@@ -183,44 +226,6 @@ public class Wolf extends JLabel {
 //
 //			}
 //		}).start();
-//
 //	}
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				int num = random.nextInt(10000);
-				while (isAttack) {
-//					random.nextInt(1000);
-//					int num = random.nextInt(1000);
-					System.out.println(num);
-					count++;
-//					if (num % 7 == 0) {
-					if (count == num) {
-						setIcon(iconAttackWolf1);
-						setLocation(510, getY());
-						try {
-							Thread.sleep( random.nextInt(2000)+500);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						setIcon(iconAttackWolf2);
-						setIcon(iconAttackWolf1);
-						setIcon(iconAttackStayWolf);
-						
-						setLocation(x, getY());
-						try {
-							Thread.sleep(800);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-//						break;
-						num = random.nextInt(10000);
-						count=0;
-						
-					}
-				}
-			}
-		}).start();
 	}
 }
