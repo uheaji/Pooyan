@@ -14,7 +14,7 @@ public class Wolf extends JLabel {
 	public Wolf wolf = this;
 	public final static String TAG = "Wolf : ";
 
-	public Main main;
+	public PooyanApp pooyanApp;
 	public int floor = 0;
 	
 	public ImageIcon iconWolfM4, iconWolfM5, iconWalkWolfR, 
@@ -56,8 +56,8 @@ public class Wolf extends JLabel {
 						if (y > 490) {
 							isDown = false;
 							isRight = true;
-							main.floor = main.floor + 1;
-							floor = main.floor;
+							pooyanApp.floor = pooyanApp.floor + 1;
+							floor = pooyanApp.floor;
 							wolf.moveRight();
 							setIcon(iconWalkWolfR);
 							break;
