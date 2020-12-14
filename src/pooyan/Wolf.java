@@ -14,7 +14,8 @@ public class Wolf extends JLabel {
 	public Wolf wolf = this;
 	public final static String TAG = "Wolf : ";
 
-	public Main main;
+	public PooyanApp pooyanApp;
+	public Pooyan pooyan;
 	public int floor = 0;
 	
 	public ImageIcon iconWolfM4, iconWolfM5, iconWalkWolfR, 
@@ -30,6 +31,7 @@ public class Wolf extends JLabel {
 	public boolean isAttack = false;
 
 	public Random random = new Random();
+	ArrayList<Wolf> attackWolves = new ArrayList<Wolf>();
 
 	public Wolf() {
 		iconWolfM4 = new ImageIcon("images/WolfMint4.png");
@@ -56,8 +58,8 @@ public class Wolf extends JLabel {
 						if (y > 490) {
 							isDown = false;
 							isRight = true;
-							main.floor = main.floor + 1;
-							floor = main.floor;
+							pooyanApp.floor = pooyanApp.floor + 1;
+							floor = pooyanApp.floor;
 							wolf.moveRight();
 							setIcon(iconWalkWolfR);
 							break;
@@ -89,10 +91,13 @@ public class Wolf extends JLabel {
 			public void run() {
 				while (isRight) {
 					if (x > 540 && floor <= 4) {
+						for (int i = 0; i < 4; i++) {
+							attackWolves.add(wolf);
+							System.out.println(attackWolves.get(i));
+						}
+						
 						isRight = false;
 						isUp = true;
-//						main.floor = main.floor + 1;
-//						floor = main.floor;
 						wolf.moveUP();
 						setIcon(iconAttackStayWolf);
 						break;
@@ -172,7 +177,7 @@ public class Wolf extends JLabel {
 
 	public void attack() {
 		System.out.println(TAG + "attack");
-
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -180,10 +185,14 @@ public class Wolf extends JLabel {
 				while (isAttack) {
 					System.out.println(num);
 					count++;
-//					if (num % 7 == 0) {
 					if (count == num) {
 						setIcon(iconAttackWolf1);
 						setLocation(510, getY());
+							for (int i = 0; i < attackWolves.size(); i++) {
+//								if (attackWolves.get(i).getX() == ) {
+//									
+//								}
+							}
 						try {
 							Thread.sleep( random.nextInt(2000)+800);
 						} catch (InterruptedException e) {
@@ -207,25 +216,6 @@ public class Wolf extends JLabel {
 			}
 		}).start();
 		
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				while (isAttack) {
-//					if ((int) (Math.random() * 1000) == 5) {
-//						setIcon(iconAttackWolf1);
-//						setLocation(510, getY());
-//					}else {
-//						try {
-//							Thread.sleep((int) (Math.random() * 1000) );
-//						} catch (InterruptedException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					}
-//				}
-//
-//			}
-//		}).start();
-//	}
+
 	}
 }
