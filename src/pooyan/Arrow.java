@@ -37,48 +37,108 @@ public class Arrow extends JLabel{
 	}
 	
 	public void kill() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(isKill) {
-					try {
-						System.out.println("í‚¬ ì“°ë ˆë“œ ì§„í–‰ì¤‘"); // ì´ê±° ì§€ìš°ë©´ ì£½ì´ëŠ”ê±° ì‘ë™ì´ ì˜ ì•ˆë¨. í™•ì¸í•„ìš”
-						for (int i = 0; i < pooyanApp.wolves.size(); i++) {
-							if(x==pooyanApp.wolves.get(i).x+40) {
-								if(y>=pooyanApp.wolves.get(i).y+10 && y<=pooyanApp.wolves.get(i).y+50) {
-									System.out.println(TAG+"í‚¬");
-									isKill = false;
-									pooyanApp.wolves.get(i).wolfStatus = false;
-									pooyan.remove(arrow);
-									pooyan.score = pooyan.score+200;
-									pooyanApp.wolves.get(i).attackedFall();
-									break;
-								}  else if(y>pooyanApp.wolves.get(i).y+50 && y<=pooyanApp.wolves.get(i).y+100) {
-									while(true) {
-										isFall=true;
-										System.out.println(TAG+"í™”ì‚´ ì¶”ë½");
-										setSize(5,60);
-										setIcon(icBowFall);
-										y++;
-										setLocation(x, y);
-										Thread.sleep(1);
-										if(y>490) {
-											pooyan.remove(arrow);
-											pooyanApp.repaint();
-											isFall=false;
-											isKill=false;
-											break;
-										}
+		//if(isKill == false) {
+			new Thread(new Runnable() {
+				
+				@Override
+				public void run() {
+					//isKill = true;
+					while (isKill) {
+						try {
+							System.out.println("Å³ ¾²·¹µå ÁøÇàÁß"); // ÀÌ°Å Áö¿ì¸é Á×ÀÌ´Â°Å ÀÛµ¿ÀÌ Àß ¾ÈµÊ. È®ÀÎÇÊ¿ä
+							
+							for (int i = 0; i < pooyanApp.wolves.size(); i++) {
+								if (x == pooyanApp.wolves.get(i).x + 40) {
+									if (y >= pooyanApp.wolves.get(i).y + 10 && y <= pooyanApp.wolves.get(i).y + 50) {
+										System.out.println(TAG + "Å³");
+										isKill = false;
+										pooyanApp.wolves.get(i).wolfStatus = false;
+										pooyan.remove(arrow);
+										pooyan.score += 200;
+										pooyanApp.laScore.setText(""+pooyan.score);
+										pooyanApp.wolves.get(i).attackedFall();
+										break;
+									} else if (y > pooyanApp.wolves.get(i).y + 60
+											&& y <= pooyanApp.wolves.get(i).y + 100) {
+										//if(isFall == false) {
+											//isFall = true;
+											while (true) {
+												isFall=true;
+												System.out.println(TAG + "È­»ì Ãß¶ô");
+												setSize(5, 60);
+												setIcon(icBowFall);
+												y++;
+												setLocation(x, y);
+												Thread.sleep(1);
+												if (y > 490) {
+													pooyan.remove(arrow);
+													pooyanApp.repaint();
+													isFall = false;
+													isKill = false;
+													break;
+												}
+											}
+										//}
+										
 									}
+
 								}
-								
 							}
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					} catch (Exception e) {
-						e.printStackTrace();
 					}
+
 				}
-			}
-		}).start();
+			}).start();
+		//}
 	}
+//	public void kill() {
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				while(isKill) {
+//					try {
+//						System.out.println("Å³ ¾²·¹µå ÁøÇàÁß"); // ÀÌ°Å Áö¿ì¸é Á×ÀÌ´Â°Å ÀÛµ¿ÀÌ Àß ¾ÈµÊ. È®ÀÎÇÊ¿ä
+//						for (int i = 0; i < pooyanApp.wolves.size(); i++) {
+//							if(x==pooyanApp.wolves.get(i).x+40) {
+//								if(y>=pooyanApp.wolves.get(i).y+10 && y<=pooyanApp.wolves.get(i).y+50) {
+//									System.out.println(TAG+"Å³");
+//									pooyan.score+=100;
+//									pooyanApp.score();
+//									System.out.println(TAG+pooyan.score);
+//									isKill = false;
+//									pooyanApp.wolves.get(i).wolfStatus = false;
+//									pooyan.remove(arrow);
+//									//pooyan.score = pooyan.score+200;
+//									pooyanApp.wolves.get(i).attackedFall();
+//									break;
+//								}  else if(y>pooyanApp.wolves.get(i).y+50 && y<=pooyanApp.wolves.get(i).y+100) {
+//									while(true) {
+//										isFall=true;
+//										System.out.println(TAG+"È­»ì Ãß¶ô");
+//										setSize(5,60);
+//										setIcon(icBowFall);
+//										y++;
+//										setLocation(x, y);
+//										Thread.sleep(1);
+//										if(y>490) {
+//											pooyan.remove(arrow);
+//											pooyanApp.repaint();
+//											isFall=false;
+//											isKill=false;
+//											break;
+//										}
+//									}
+//								}
+//								
+//							}
+//						}
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//		}).start();
+//	}
 }
