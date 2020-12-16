@@ -40,6 +40,4 @@ public class TitleFrame extends JFrame{
 		new TitleFrame();
 
 	}
-
 }
-

@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,6 +17,7 @@ public class ScoreFrame extends JFrame{
 	private PooyanApp pooyanApp;
 	
 	public JLabel laScore;
+	public FileWriter fout = null;
 	
 	public ScoreFrame(PooyanApp pooyanApp) {
 		this.pooyanApp= pooyanApp;
@@ -32,18 +36,17 @@ public class ScoreFrame extends JFrame{
 		laScore.setFont(new Font("Serif", Font.BOLD, 30));
 		laScore.setForeground(Color.BLACK);
 		
+
+//		try {
+//			fout = new FileWriter("D:\\pooyanScore.txt", true);
+//			fout.append(pooyanApp.score + "\n");
+//			fout.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
 		add(laScore);
 		
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					pooyanApp.dispose();
-					new PooyanApp();
-					dispose();
-				} 
-			}
-		});
 		setVisible(true);
 		
 	}

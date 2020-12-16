@@ -2,20 +2,14 @@ package pooyan;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class PooyanApp extends JFrame implements Initable {
 
@@ -29,51 +23,33 @@ public class PooyanApp extends JFrame implements Initable {
 	private Wolf wolf;
 	private Pooyan pooyan;
 	ArrayList<Wolf> wolves;
-	public int score = 0;
 	
-	public boolean isAddWolf = false;
 	public JLabel laRemainWolf;
-	private JLabel laLife;
-	
 	public int remainWolf = 32;
-	private JLabel laGameOver;
+	public JLabel laLife;
 	
-	//public boolean isReset = false;
+	public JLabel laScore;
+	public int score = 0;
+
 	public int randTime; // 늑대 생성 간격 랜덤 시간
 	public int randWolf; // 늑대 생성 수 랜덤
-	
-	private Clip clip;
-	public JLabel laScore;
-	//public boolean isEnd = false;
 
 	public boolean gameStatus = true;
-	
-	public void Play(String fileName) {
-		try {
-			AudioInputStream ais = AudioSystem.getAudioInputStream(new File(fileName));
-			clip = AudioSystem.getClip();
-			clip.open(ais);
-			clip.start();
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void Stop() {
-		clip.stop();
-		clip.close();
-	}
 
 	public PooyanApp() {
 		init();
 		setting();
 		batch();
 		listener();
+		
+
 
 		setVisible(true);
 	}
+
+//		public static void main(String[] args) {
+//			new PooyanApp();
+//		}
 
 	@Override
 	public void init() {
@@ -81,11 +57,10 @@ public class PooyanApp extends JFrame implements Initable {
 		wolves = new ArrayList<Wolf>();
 		pooyan = new Pooyan(pooyanApp, wolf);
 		laRemainWolf = new JLabel();
-		laLife = new JLabel();
-		// viewPanel = new JPanel();
-		// gameOverPanel = new JPanel();
-		laGameOver = new JLabel();
 		laScore = new JLabel();
+		
+		laLife = new JLabel();
+
 	}
 
 	@Override
@@ -97,39 +72,33 @@ public class PooyanApp extends JFrame implements Initable {
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 		setContentPane(laBackground);
+
 		laRemainWolf.setText("" + remainWolf);
 		laRemainWolf.setSize(30, 30);
 		laRemainWolf.setLocation(10, 10);
 		laRemainWolf.setFont(new Font("Serif", Font.BOLD, 30));
 		laRemainWolf.setForeground(Color.WHITE);
 
-		laLife.setText("❤ ❤");
-		laLife.setSize(70, 30);
-		laLife.setLocation(520, 40);
-		laLife.setFont(new Font("Serif", Font.BOLD, 30));
-		laLife.setForeground(Color.WHITE);
-
-		laScore.setText(" "+pooyan.score);
-		laScore.setSize(70, 30);
-		laScore.setLocation(500, 10);
+		laScore.setText("" + pooyan.score);
+		laScore.setSize(100, 30);
+		laScore.setLocation(500, 0);
 		laScore.setFont(new Font("Serif", Font.BOLD, 30));
 		laScore.setForeground(Color.WHITE);
-
-		laGameOver.setText("GAME OVER");
-		laGameOver.setSize(200, 30);
-		laGameOver.setLocation(200, 100);
-		laGameOver.setFont(new Font("Serif", Font.BOLD, 100));
-		laGameOver.setForeground(Color.WHITE);
+		
+		laLife.setText("❤ ❤");
+		laLife.setFont(new Font("Serif", Font.BOLD, 30));
+		laLife.setForeground(Color.WHITE);
+		//laLife.setLocation(400,0);
+		laLife.setBounds(530, 20, 70, 30);
 	}
 
 	@Override
 	public void batch() {
 		add(pooyan);
 		wolfAdd(); // 늑대 생성
-		add(laRemainWolf);
+		getContentPane().add(laRemainWolf);
+		getContentPane().add(laScore);
 		add(laLife);
-		add(laScore);
-		// add(viewPanel);
 	}
 
 	@Override
@@ -139,12 +108,19 @@ public class PooyanApp extends JFrame implements Initable {
 			public void keyPressed(KeyEvent e) {
 
 				if (e.getKeyCode() == KeyEvent.VK_UP) {
-					pooyan.moveUp();
+					if (pooyan.pooyanStatus == true) {
+						pooyan.moveUp();
+					}
+					
 				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-					pooyan.moveDown();
+					if (pooyan.pooyanStatus == true) {
+						pooyan.moveDown();
+					}
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					pooyan.isShoot = true;
-					pooyan.shoot();
+					if (pooyan.pooyanStatus == true) {
+						pooyan.isShoot = true;
+						pooyan.shoot();
+					}	
 
 				}
 
@@ -160,9 +136,11 @@ public class PooyanApp extends JFrame implements Initable {
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 					System.out.println("keyReleased");
 					pooyan.isShoot = false;
+//						pooyan.isItem = false;
+					if(pooyan.pooyanStatus == true) {
+						pooyan.shoot();
 
-					pooyan.shoot();
-
+					}
 				}
 			}
 
@@ -170,26 +148,10 @@ public class PooyanApp extends JFrame implements Initable {
 
 	}
 
-//	public void score() {
-//		new Thread(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				while (true) {
-//					laScore.setText(Integer.toString(pooyan.score));
-//					break;
-//				}
-//
-//			}
-//		}).start();
-//	}
-
 	public void wolfAdd() {
-
 		new Thread(new Runnable() {
 			public void run() {
 				while (remainWolf > 0 && gameStatus==true) {
-					// if(isReset) break;
 					try {
 						System.out.println(TAG + pooyan.score);
 						randWolf = (int) (Math.random() * 3) + 2;
@@ -218,45 +180,41 @@ public class PooyanApp extends JFrame implements Initable {
 
 	// 플레이어가 죽었을때 리셋
 	public void reset() {
-		
 		for (int i = 0; i < wolves.size(); i++) {
+
 			remove(wolves.get(i));
 			wolves.get(i).wolfStatus = false;
 		}
+		System.out.println(TAG+"pooyan.life"+pooyan.life);
 		wolves.clear();
+		if (pooyan.life == 1) {
+			laLife.setText("❤");
+			
+			System.out.println(TAG+"pooyan.life"+pooyan.life);
+
+		} else if (pooyan.life == 0) {
+			remove(pooyan.jpPlayer);
+			laLife.setText("");
+			System.out.println(TAG+"pooyan.life"+pooyan.life);
+			repaint();
+
+		}
 		repaint();
 		count = 0;
 		floor = 0;
-		pooyan.reset();
+		pooyan.x = 486;
+		pooyan.y = 130;
+		pooyan.jpPlayer.setLocation(pooyan.x, pooyan.y);
 		
-//		pooyan.x = 486;
-//		pooyan.y = 130;
-//		pooyan.jpPlayer.setLocation(pooyan.x, pooyan.y);
-
-		if (pooyan.life == 1) {
-			laLife.setText("❤");
-
-		} else if (pooyan.life == 0) {
-			//isEnd = true;
-			
-			//remove(pooyan.jpPlayer);
-			// remove(pooyan);
-			laLife.setText("");
-			System.out.println(TAG+"pooyan.life"+pooyan.life);
-			//repaint();
-
-		}
-
+		
 	}
+	
 	// 플레이어가 목숨을 다 잃었거나 목표치의 wolf를 죽였을때 게임엔드
-		public void gameEnd() {
-			gameStatus = false;
-			reset();
-			add(laGameOver);
-			score = pooyan.score;
-			System.out.println(TAG+gameStatus);
-			new ScoreFrame(pooyanApp);
-		}
-	
-	
+	public void gameEnd() {
+		gameStatus = false;
+		reset();
+		score = pooyan.score;
+		System.out.println(TAG+gameStatus);
+		new ScoreFrame(pooyanApp);
+	}
 }

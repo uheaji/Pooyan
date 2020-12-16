@@ -18,13 +18,4 @@ public class Bomb extends JLabel{
 		setSize(20,20);
 		setLocation(0,0);
 	}
-	
-	
-	
-		
-	
-	/*
-	 * if(pooyan.x == wolf.bomb.x
-	 * 
-	 * */
 }
